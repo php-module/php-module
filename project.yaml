@@ -1,0 +1,11 @@
+# PHP File Moduler
+
+php-module:
+  files:
+    php_modules: # Directory containg whole the php modules
+      .autoload #Directory containg whole the php-module files
+      ... modules
+
+  project:
+    .autoload:
+      
