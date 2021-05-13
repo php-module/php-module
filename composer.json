@@ -1,0 +1,44 @@
+{
+  "name": "php_modules/core",
+  "version": "1.0",
+  "description": "A differnt way for modularising php scripts.",
+  "type": "library",
+  "minimum-stability": "dev",
+  "autoload": {
+    "classmap": ["Sammy\\Packs\\"],
+    "files": ["autoload.php"]
+  },
+  "keywords": [
+    "Sammy",
+    "Sammy-Packs",
+    "packs",
+    "php",
+    "module",
+    "php-module",
+    "module-php",
+    "modules",
+    "php-modules",
+    "modules-php",
+    "modular",
+    "modular-php"
+  ],
+  "homepage": "https://github.com/php-modules/php-module",
+  "readme": "./README.md",
+  "license": "MIT",
+  "authors": [
+    {
+      "name": "Agostinho Lopes",
+      "email": "agostinhosaml832@gmail.com",
+      "homepage": "https://agostinhosamil.github.io",
+      "role": "Developer"
+    }
+  ],
+  "support": {
+    "email": "base.samils@gmail.com",
+    "issues": "https://github.com/php-module/php-module/issues",
+    "wiki": "https://github.com/php-module/php-module/wiki"
+  },
+  "requires": {
+    "php": ">=5.3.20"
+  }
+}
