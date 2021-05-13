@@ -36,5 +36,8 @@
     "email": "base.samils@gmail.com",
     "issues": "https://github.com/php-module/php-module/issues",
     "wiki": "https://github.com/php-module/php-module/wiki"
+  },
+  "requires": {
+    "php": "^5.3.20"
   }
 }
