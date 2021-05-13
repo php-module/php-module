@@ -52,37 +52,31 @@ namespace php;
  *  The sent arguments to the module scope
  * @return unknown
  */
-function requires_relative ($__module__, $trace = null){
-	$args = array_slice (func_get_args(), 2,
-		func_num_args ()
-	);
+if (!function_exists ('php/requires_relative')) {
+function requires_relative ($__module__, $trace = null) {
+  $args = array_slice (func_get_args(), 2,
+    func_num_args ()
+  );
 
-	$backTraceDatasSentFromFuncArguments = (boolean) (
-		is_array ($trace) &&
-		isset($trace[0])  &&
-		isset($trace[0][
-			'file'
-		])
-	);
+  if ( !module::validTrace ( $trace ) ) {
+    $trace = debug_backtrace ();
+  }
 
-	if (!$backTraceDatasSentFromFuncArguments)
-		$trace = debug_backtrace();
+  $alts = module::ImportAlternateDirectories (
+    dirname ($trace[0]['file']), $__module__
+  );
 
-	$alts = module::ImportAlternateDirectories (
-		dirname ($trace[0]['file']), $__module__
-	);
+  $altsLen = count ($alts);
 
-	$altsLen = count ($alts);
+  for ($i = 0; $i < $altsLen; $i++) {
+    $filePath = module::shouldImport (
+      $alts [ $i ]
+    );
 
-	for ($i = 0; $i < $altsLen; $i++) {
-		$ext = module::shouldImport (
-			$alts[$i]
-		);
-
-		if ( is_string ($ext) ) {
-            return call_user_func_array ('php\requires',
-                array_merge ([$alts[$i] . $ext], $args)
-            );
-		}
-	}
-}
+    if ( is_string ($filePath) ) {
+      return call_user_func_array ('php\requires',
+        array_merge ([ $filePath ], $args, [$trace])
+      );
+    }
+  }
+}}

@@ -39,7 +39,8 @@ namespace php\module {
          * [$exports]
          * @var boolean
          */
-        public $exports;
+        private $exports;
+        private $moduleInterrop = false;
         /**
          * @var module_cache
          * - Module cache is an array containg
@@ -59,19 +60,29 @@ namespace php\module {
          * @var array
          */
         private static $module_default_paths = [
-            '~' => '<rootDir>',
-            '@root' => '<rootDir>',
-            '/^((module(Root)?|)Dir)$/i' => ':module_root_dir'
+          '~' => '<rootDir>',
+          '@root' => '<rootDir>',
+          '/^((module(Root)?|)Dir)$/i' => (
+            ':module_root_dir'
+          )
         ];
         /**
          * [$module_configs]
          * @var array
          */
         private static $module_configs = [
-            'extensions-file-path' => '~/config/modules',
-            'php-modules-directories' => [],
-            'php-module-paths' => [],
-            'root-dir' => '/'
+          'extensions-file-path' => '~/config/modules',
+          'php-modules-directories' => [
+            \Sammy\Packs\php\module\PM_ROOT_DIR . (
+              '/php-module/modules'
+            )
+          ],
+          'php-module-paths' => [
+            \Sammy\Packs\php\module\PM_ROOT_DIR . (
+              '/php-module/modules'
+            )
+          ],
+          'root-dir' => '/'
         ];
     }
 }

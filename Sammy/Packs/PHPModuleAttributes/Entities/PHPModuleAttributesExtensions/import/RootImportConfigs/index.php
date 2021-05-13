@@ -100,7 +100,7 @@ namespace php\module {
             return join (DS, array_values ($moduleDatas));
         }
 
-        private static function validTrace ($backTrace) {
+        public static function validTrace ($backTrace) {
             return ( boolean ) (
                 is_array ($backTrace) &&
                 isset ($backTrace [ 0 ]) &&
