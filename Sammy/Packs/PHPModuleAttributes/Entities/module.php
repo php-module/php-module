@@ -31,12 +31,6 @@
  * SOFTWARE.
  */
 namespace php {
-  $pm_autoload_file = dirname (dirname(dirname(dirname(__DIR__))));
-  $pm_autoload_file .= DIRECTORY_SEPARATOR . 'autoload.php';
-
-  if (is_file ($pm_autoload_file)) {
-    include_once $pm_autoload_file;
-  }
   /**
    * Make sure the module base internal class is not
    * declared in the php global scope defore creating
