@@ -38,6 +38,6 @@
     "wiki": "https://github.com/php-module/php-module/wiki"
   },
   "requires": {
-    "php": "^5.3.20"
+    "php": ">=5.3.20"
   }
 }
