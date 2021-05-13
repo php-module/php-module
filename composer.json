@@ -1,5 +1,5 @@
 {
-  "name": "php_modules/php_modules",
+  "name": "php_modules/core",
   "version": "1.0",
   "description": "A differnt way for modularising php scripts.",
   "type": "library",
