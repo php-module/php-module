@@ -38,7 +38,7 @@
     "issues": "https://github.com/php-module/php-module/issues",
     "wiki": "https://github.com/php-module/php-module/wiki"
   },
-  "requires": {
+  "require": {
     "php": ">=5.3.20"
   }
 }
