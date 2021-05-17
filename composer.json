@@ -1,6 +1,6 @@
 {
   "name": "php_modules/core",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "description": "A differnt way for modularising php scripts.",
   "type": "library",
   "minimum-stability": "dev",
