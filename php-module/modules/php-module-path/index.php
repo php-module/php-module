@@ -15,7 +15,7 @@ namespace Sammy\Packs\PHPModule\Path {
    * declared in the php global scope defore creating
    * it.
    */
-  if (!class_exists('Sammy\Packs\PHPModule\Path\Base')){
+  if (!class_exists ('Sammy\Packs\PHPModule\Path\Base')) {
   /**
    * @class Base
    * Base internal class for the
@@ -31,11 +31,10 @@ namespace Sammy\Packs\PHPModule\Path {
    * an 'exts' directory in the module directory
    * and boot it by using the ils directory boot.
    * -
-   * \Samils\dir_boot ('./exts');
    */
   class Base {
 
-    public final function resolve () {
+    public function resolve () {
       if (func_num_args() >= 1) {
         $funcArgs = func_get_args ();
         $defaultTrace = debug_backtrace ();
@@ -52,16 +51,12 @@ namespace Sammy\Packs\PHPModule\Path {
 
           $i = 0;
           $ds = DIRECTORY_SEPARATOR;
-          $baseDir = dirname (
-            $arg1[0][ 'file' ]
-          );
+          $baseDir = dirname ($arg1 [0][ 'file' ]);
 
 
-          if (phpmodule::definedPath ($arg0[ 0 ])) {
+          if (phpmodule::definedPath ($arg0 [0])) {
             $i = 1;
-            $baseDir = phpmodule::readPath (
-              $arg0[ 0 ]
-            );
+            $baseDir = phpmodule::readPath ($arg0 [0]);
           }
 
           $resolvedPath = preg_replace ('/((\\\|\/)+)$/', '', $baseDir) . (
@@ -70,30 +65,24 @@ namespace Sammy\Packs\PHPModule\Path {
 
           return ($resolvedPath);
         } elseif (self::areStr ($funcArgs)) {
-          return $this->resolve ($funcArgs,
-            $defaultTrace
-          );
+          return $this->resolve ($funcArgs, $defaultTrace);
         }
       }
     }
 
-    public final function join () {
+    public function join () {
       $args = func_get_args ();
       # Make sure the given arguments
       # list only contains strings
       # before joning
       if (self::areStr ($args)) {
-        $path = join (DIRECTORY_SEPARATOR,
-          $args
-        );
+        $path = join (DIRECTORY_SEPARATOR, $args);
 
-        return phpmodule::readPath (
-          $path
-        );
+        return phpmodule::readPath ($path);
       }
     }
 
-    private static final function areStr ($datas) {
+    private static function areStr (array $datas) {
       foreach ($datas as $data) {
         if (!is_string ($data)) {
           return false;

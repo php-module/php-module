@@ -1,12 +1,21 @@
 {
   "name": "php_modules/core",
-  "version": "1.0.2",
-  "description": "A differnt way for modularising php scripts.",
+  "version": "0.0.1",
+  "description": "A different way for modularising php scripts.",
   "type": "library",
   "minimum-stability": "dev",
   "autoload": {
-    "classmap": ["Sammy\\Packs\\"],
-    "files": ["autoload.php"]
+    "psr-4": {
+      "Sammy\\": "Sammy/",
+      "php\\": "php/"
+    },
+    "psr-0": {
+      "Sammy\\": "Sammy/",
+      "php\\": "php/"
+    },
+    "files": [
+      "autoload.php"
+    ]
   },
   "keywords": [
     "Sammy",
@@ -34,7 +43,7 @@
     }
   ],
   "support": {
-    "email": "base.samils@gmail.com",
+    "email": "base.phpmodules@gmail.com",
     "issues": "https://github.com/php-module/php-module/issues",
     "wiki": "https://github.com/php-module/php-module/wiki"
   },

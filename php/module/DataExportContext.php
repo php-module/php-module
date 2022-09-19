@@ -15,7 +15,7 @@ namespace php\module {
    * declared in the php global scope defore creating
    * it.
    */
-  if (!class_exists('php\module\DataExportContext')){
+  if (!class_exists ('php\module\DataExportContext')) {
   /**
    * @class DataExportContext
    * Base internal class for the
@@ -31,7 +31,6 @@ namespace php\module {
    * an 'exts' directory in the module directory
    * and boot it by using the ils directory boot.
    * -
-   * \Samils\dir_boot ('./exts');
    */
   class DataExportContext {
     /**

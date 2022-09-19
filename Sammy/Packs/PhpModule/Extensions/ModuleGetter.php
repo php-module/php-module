@@ -5,7 +5,7 @@
  *
  * @keywords Samils, ils, php framework
  * -----------------
- * @package Sammy\Packs\PHPModule\FileAbsolutePath
+ * @package Sammy\Packs\PhpModule\Extensions
  * - Autoload, application dependencies
  *
  * MIT License
@@ -30,21 +30,20 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-namespace Sammy\Packs\PHPModule\FileAbsolutePath {
-  use php\module as phpmodule;
+namespace Sammy\Packs\PhpModule\Extensions {
   /**
-   * Make sure the module base internal class is not
+   * Make sure the module base internal trait is not
    * declared in the php global scope defore creating
    * it.
    * It ensures that the script flux is not interrupted
    * when trying to run the current command by the cli
    * API.
    */
-  if (!class_exists ('Sammy\Packs\PHPModule\FileAbsolutePath\Base')) {
+  if (!trait_exists ('Sammy\Packs\PhpModule\Extensions\ModuleGetter')) {
   /**
-   * @class Base
-   * Base internal class for the
-   * PHPModule\FileAbsolutePath module.
+   * @trait ModuleGetter
+   * Base internal trait for the
+   * PhpModule\Extensions module.
    * -
    * This is (in the ils environment)
    * an instance of the php module,
@@ -57,14 +56,19 @@ namespace Sammy\Packs\PHPModule\FileAbsolutePath {
    * and boot it by using the ils directory boot.
    * -
    */
-  class Base {
+  trait ModuleGetter {
     /**
-     * @method string getFileAbsolutePath
+     * @method mixed get module exports object
      */
-    public function getFileAbsolutePath (string $filePath = '') {
-      return phpmodule::fileAbsolutePath ($filePath);
+    private function get_exports () {
+      return $this->moduleInterrop ? $this : $this->exports;
+    }
+
+    /**
+     * @method mixed get module default exports object
+     */
+    private function get_default () {
+      return $this->props ['#default'];
     }
   }}
-
-  $module->exports = new Base;
 }

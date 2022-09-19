@@ -14,7 +14,7 @@ namespace php {
    * declared in the php global scope defore creating
    * it.
    */
-  if (!function_exists('php\\def')){
+  if (!function_exists ('php\\def')) {
   /**
    * @function def
    * Base internal function for the
@@ -32,9 +32,7 @@ namespace php {
    */
   function def ($property, $value) {
     if (is_array ($property) && func_num_args () >= 2) {
-      list ($arguments, $backTrace) = (
-        func_get_args ()
-      );
+      list ($arguments, $backTrace) = func_get_args ();
     } elseif (is_string ($property)) {
       $arguments = func_get_args ();
       $backTrace = debug_backtrace ();
@@ -43,7 +41,6 @@ namespace php {
     if (!module::validTrace ($backTrace)) {
       $backTrace = debug_backtrace ();
     }
-
 
     $definingFromModuleContext = ( boolean ) (
       isset ($backTrace [2]) &&
@@ -64,9 +61,7 @@ namespace php {
       /**
        * setProp
        */
-      return call_user_func_array ([$module, 'setProp'],
-        $arguments
-      );
+      return call_user_func_array ([$module, 'setProp'], $arguments);
     }
   }}
 }

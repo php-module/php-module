@@ -31,48 +31,31 @@
  * SOFTWARE.
  */
 namespace Sammy\Packs\php\module {
+  use Sammy\Packs\PhpModule\Helper;
 	/**
 	 * Root
 	 * Absoluete path to the current directory
 	 * whish phpmodule will considere as its
 	 * root directory
 	 */
-	const PM_ROOT_DIR = __DIR__;
-  const PM_NAMESPACE = 'Sammy\\Packs\\php\\module';
+	defined ('PHP_MODULE_ROOT_DIR') or define ('PHP_MODULE_ROOT_DIR', __DIR__);
+  defined ('PHP_MODULE_NAMESPACE') or define ('PHP_MODULE_NAMESPACE', 'Sammy\Packs\php\module');
 
-	if (!function_exists (PM_NAMESPACE . '\\pm_is_php_file')) {
-	function pm_is_php_file ($file = null){
-		# Verify if '$file' a php file
-		return ( boolean )( is_string($file) &&
-			!empty($file) &&
-			in_array (strtolower (pathinfo ($file, PATHINFO_EXTENSION)),
-				preg_split ('/\s+/', 'php')
-			)
-		);
-	}}
+  $autoloadFile = __DIR__ . '/vendor/autoload.php';
 
-	if (!function_exists (PM_NAMESPACE . '\\pm_autoload_directory_files')) {
-	function pm_autoload_directory_files ($dir = null) {
-		if (!(is_string($dir) && !empty($dir) && is_dir($dir)))
-			$dir = dirname(__FILE__);
+  $phpModuleHelpersDirPath = join (DIRECTORY_SEPARATOR, [
+    PHP_MODULE_ROOT_DIR,
+    'Sammy',
+    'Packs',
+    'PHPModuleAttributes',
+    'Helpers'
+  ]);
 
-		$dir = preg_replace('/(\\|\/)+$/', '', $dir) . (
-			'/*'
-		);
-		$dir_files = glob($dir);
+  if (is_file ($autoloadFile)) {
+    include_once $autoloadFile;
+  }
 
-		foreach ($dir_files as $key => $value) {
-			if ( is_dir ($value) ) {
-				pm_autoload_directory_files ( $value );
-			} else {
-				if (pm_is_php_file ($value)) {
-					include_once $value;
-				}
-			}
-		}
-	}}
-
-	pm_autoload_directory_files ( PM_ROOT_DIR . '/Sammy' );
+	Helper::autoloadFiles ($phpModuleHelpersDirPath);
   #
   # import the index file containg the php-module
   # core global function to be used when importing

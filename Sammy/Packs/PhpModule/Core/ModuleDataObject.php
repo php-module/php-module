@@ -5,21 +5,45 @@
  *
  * @keywords Samils, ils, php framework
  * -----------------
- * @namespace php\module
+ * @package Sammy\Packs\PhpModule\Core
  * - Autoload, application dependencies
+ *
+ * MIT License
+ *
+ * Copyright (c) 2020 Ysare
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * of this software and associated documentation files (the "Software"), to deal
+ * in the Software without restriction, including without limitation the rights
+ * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ * copies of the Software, and to permit persons to whom the Software is
+ * furnished to do so, subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in all
+ * copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+ * SOFTWARE.
  */
-namespace php\module {
-  use Closure;
+namespace Sammy\Packs\PhpModule\Core {
   /**
-   * Make sure the module base internal class is not
+   * Make sure the module base internal trait is not
    * declared in the php global scope defore creating
    * it.
+   * It ensures that the script flux is not interrupted
+   * when trying to run the current command by the cli
+   * API.
    */
-  if (!trait_exists('php\module\InstanceFragmentBase')){
+  if (!trait_exists ('Sammy\Packs\PhpModule\Core\ModuleDataObject')) {
   /**
-   * @trait InstanceFragmentBase
+   * @trait ModuleDataObject
    * Base internal trait for the
-   * module module.
+   * PhpModule\Core module.
    * -
    * This is (in the ils environment)
    * an instance of the php module,
@@ -31,9 +55,8 @@ namespace php\module {
    * an 'exts' directory in the module directory
    * and boot it by using the ils directory boot.
    * -
-   * \Samils\dir_boot ('./exts');
    */
-  trait InstanceFragmentBase {
+  trait ModuleDataObject {
     /**
      * [$props Properties]
      * @var array
@@ -58,11 +81,9 @@ namespace php\module {
      * @param string $prop
      * @param mixed $value
      */
-    public final function setProp ($prop = '', $value = null) {
-      if ( $this->pvn ($prop) ) {
-        $traceDatas = self::getTraceDatas (func_get_args(),
-          debug_backtrace ()
-        );
+    public function setProp ($prop = '', $value = null) {
+      if ($this->isValidPropName ($prop)) {
+        $traceDatas = self::getTraceDatas (func_get_args(), debug_backtrace ());
 
         $traceFile = $traceDatas ['file'];
 
@@ -86,7 +107,7 @@ namespace php\module {
         );
 
         if ( !$propertyDefined ) {
-          $props = self::$modulesExports [ $this->moduleFile ][
+          $props = self::$modulesExports [$this->moduleFile][
             'props'][$prop] = $value;
         }
       }
@@ -99,8 +120,8 @@ namespace php\module {
      * @param  string $porp
      * @return mixed
      */
-    public final function getProp ($prop = null) {
-      if (is_string ($prop) && $this->pvn ($prop)) {
+    public function getProp ($prop = null) {
+      if (is_string ($prop) && $this->isValidPropName ($prop)) {
 
         $traceDatas = self::getTraceDatas (func_get_args(),
           debug_backtrace ()
@@ -140,13 +161,12 @@ namespace php\module {
         $backTrace = $defaultTrace;
       }
 
-      $trace = $backTrace [ 0 ];
-      $traceFile = !isset ($trace ['file']) ? '' : (
-        $trace [ 'file' ]
-      );
+      $trace = $backTrace [0];
+      $traceFile = !isset ($trace ['file']) ? '' : $trace ['file'];
 
       return [
-        $backTrace, 'file' => $traceFile
+        $backTrace,
+        'file' => $traceFile
       ];
     }
 
@@ -154,14 +174,12 @@ namespace php\module {
     /**
      * [__set]
      */
-    public final function __set ($prop = '', $value = null) {
+    public function __set ($prop = '', $value = null) {
       $traceDatas = self::getTraceDatas (func_get_args(),
         debug_backtrace ()
       );
 
-      $property = 'set_' . strtolower (
-        (string)( $prop )
-      );
+      $property = 'set_' . strtolower ((string)( $prop ));
 
       if (method_exists ($this, $property)) {
         return call_user_func_array ([$this, $property],
@@ -177,14 +195,10 @@ namespace php\module {
     /**
      * [__get]
      */
-    public final function __get ($prop = '') {
-      $traceDatas = self::getTraceDatas (func_get_args(),
-        debug_backtrace ()
-      );
+    public function __get ($prop = '') {
+      $traceDatas = self::getTraceDatas (func_get_args(), debug_backtrace ());
 
-      $property = 'get_' . strtolower (
-        (string)( $prop )
-      );
+      $property = 'get_' . strtolower ((string)( $prop ));
 
       if (method_exists ($this, $property)) {
         return call_user_func ([$this, $property]);
@@ -198,22 +212,16 @@ namespace php\module {
      * [__invoke]
      * @return mixed
      */
-    public final function __invoke () {
-      $constructorAlts = preg_split ('/\s+/',
-        '__init __initialize initialize'
-      );
+    public function __invoke () {
+      $constructorAlts = preg_split ('/\s+/', '__init __initialize initialize');
 
       foreach ($constructorAlts as $constructorAlt) {
         $altProp = $this->getProp ($constructorAlt);
 
         if ($altProp instanceof Closure) {
-          $methClosure = Closure::bind ($altProp,
-            $this, self::class
-          );
+          $methClosure = Closure::bind ($altProp, $this, self::class);
 
-          return call_user_func_array ($methClosure,
-            func_get_args ()
-          );
+          return call_user_func_array ($methClosure, func_get_args ());
         }
       }
     }
@@ -223,17 +231,13 @@ namespace php\module {
      * @param  array  $args
      * @return mixed
      */
-    public final function __call ($meth = '', $args = []) {
+    public function __call ($meth = '', $args = []) {
       $methProp = $this->getProp ($meth);
 
       if ($methProp instanceof Closure) {
-        $methClosure = Closure::bind ($methProp,
-          $this, self::class
-        );
+        $methClosure = Closure::bind ($methProp, $this, self::class);
 
-        return call_user_func_array ($methClosure,
-          $args
-        );
+        return call_user_func_array ($methClosure, $args);
       }
     }
     /**
@@ -244,30 +248,28 @@ namespace php\module {
      * @param  string $prop
      * @return boolean
      */
-    public final function __isset ($prop = null) {
+    public function __isset ($prop = null) {
       $prop = strtolower ((string)($prop));
       return ( boolean ) (isset ($this->props [ $prop ]));
     }
 
-    public final function moduleInterrop () {
-      return ( boolean ) ($this->moduleInterrop);
+    public function moduleInterrop () {
+      return (boolean) ($this->moduleInterrop);
     }
 
-    private final function pvn ($prop) {
-      return ( boolean ) (
+    private function isValidPropName ($prop) {
+      return (boolean)(
         is_string ($prop)
-        && !empty ($prop) &&
-        preg_match ('/^([a-zA-Z0-9_]+)$/',
-          $prop
-        )
+        && !empty ($prop)
+        && preg_match ('/^([a-zA-Z0-9_]+)$/', $prop)
       );
     }
 
-    private static final function register ($traceFile) {
-      if (!isset (self::$modulesExports [ $traceFile ])) {
-        self::$modulesExports [ $traceFile ] = array (
+    private static function register ($traceFile) {
+      if (!isset (self::$modulesExports [$traceFile])) {
+        self::$modulesExports [$traceFile] = array (
           'exports' => null,
-          'props' => array ()
+          'props' => []
         );
       }
     }
@@ -276,25 +278,27 @@ namespace php\module {
       return (int)(++self::$id);
     }
 
-    public final function __initialize_module_register () {
-      if ( !$this->moduleFile ) return;
+    public function __initialize_module_register () {
+      if (!$this->moduleFile) {
+        return;
+      }
 
       $moduleFile = $this->moduleFile;
 
       $context = $this->moduleInterrop ? $this : $this->exports;
 
-      if (!isset (self::$moduleContexts [ $moduleFile ])) {
-        self::$moduleContexts [ $moduleFile ] = $context;
+      if (!isset (self::$moduleContexts [$moduleFile])) {
+        self::$moduleContexts [$moduleFile] = $context;
       }
     }
 
-    public final function __getModuleContext ($module) {
-      if (isset (self::$moduleContexts [ $module ])) {
-        return self::$moduleContexts [ $module ];
+    public static function __getModuleContext ($module) {
+      if (isset (self::$moduleContexts [$module])) {
+        return self::$moduleContexts [$module];
       }
     }
 
-    public static final function fileAbsolutePath ($filePath) {
+    public static function fileAbsolutePath ($filePath) {
       $filePathSlices = preg_split ('/(\\\|\/)+/', $filePath);
       $filePathSlicesCount = count ($filePathSlices);
       $fileAbsolutePath = '';
@@ -312,6 +316,5 @@ namespace php\module {
 
       return preg_replace ('/^(\\\|\/)/', '', $fileAbsolutePath);
     }
-
   }}
 }

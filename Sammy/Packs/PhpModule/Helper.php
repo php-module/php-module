@@ -5,7 +5,7 @@
  *
  * @keywords Samils, ils, php framework
  * -----------------
- * @package Sammy\Packs\PHPModule\FileAbsolutePath
+ * @package Sammy\Packs\PhpModule
  * - Autoload, application dependencies
  *
  * MIT License
@@ -30,8 +30,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-namespace Sammy\Packs\PHPModule\FileAbsolutePath {
-  use php\module as phpmodule;
+namespace Sammy\Packs\PhpModule {
   /**
    * Make sure the module base internal class is not
    * declared in the php global scope defore creating
@@ -40,11 +39,11 @@ namespace Sammy\Packs\PHPModule\FileAbsolutePath {
    * when trying to run the current command by the cli
    * API.
    */
-  if (!class_exists ('Sammy\Packs\PHPModule\FileAbsolutePath\Base')) {
+  if (!class_exists ('Sammy\Packs\PhpModule\Helper')) {
   /**
-   * @class Base
+   * @class Helper
    * Base internal class for the
-   * PHPModule\FileAbsolutePath module.
+   * PhpModule module.
    * -
    * This is (in the ils environment)
    * an instance of the php module,
@@ -57,14 +56,42 @@ namespace Sammy\Packs\PHPModule\FileAbsolutePath {
    * and boot it by using the ils directory boot.
    * -
    */
-  class Base {
+  class Helper {
     /**
-     * @method string getFileAbsolutePath
+     * @method boolean isPhpFile
      */
-    public function getFileAbsolutePath (string $filePath = '') {
-      return phpmodule::fileAbsolutePath ($filePath);
+    private static function isPhpFile (string $file) {
+      $fileExtension = strtolower (pathinfo ($file, PATHINFO_EXTENSION));
+      # Verify if '$file' a php file
+      return ( boolean )(
+        file_exists ($file) &&
+        in_array ($fileExtension, ['php'])
+      );
+    }
+
+    /**
+     * @method void autoloadFiles
+     */
+    public static function autoloadFiles (string $dir = null) {
+      if (!(is_string ($dir) && is_dir ($dir))) {
+        $dir = dirname (__FILE__);
+      }
+
+      $dir = preg_replace ('/(\\|\/)+$/', '', $dir);
+
+      $dirPathRe = join (DIRECTORY_SEPARATOR, [
+        $dir, '*'
+      ]);
+
+      $dirFileList = glob ($dirPathRe);
+
+      foreach ($dirFileList as $dirFilePath) {
+        if (is_dir ($dirFilePath)) {
+          self::autoloadFiles ($dirFilePath);
+        } elseif (self::isPhpFile ($dirFilePath)) {
+          include_once $dirFilePath;
+        }
+      }
     }
   }}
-
-  $module->exports = new Base;
 }

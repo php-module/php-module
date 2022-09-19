@@ -5,7 +5,7 @@
  *
  * @keywords Samils, ils, php framework
  * -----------------
- * @package php\module
+ * @package Sammy\Packs\PhpModule
  * - Autoload, application dependencies
  *
  * MIT License
@@ -30,20 +30,20 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-namespace php {
+namespace Sammy\Packs\PhpModule {
   /**
-   * Make sure the module base internal class is not
+   * Make sure the module base internal trait is not
    * declared in the php global scope defore creating
    * it.
    * It ensures that the script flux is not interrupted
    * when trying to run the current command by the cli
    * API.
    */
-  if (!class_exists ('php\module')){
+  if (!trait_exists ('Sammy\Packs\PhpModule\ImportAlternateDirectories')) {
   /**
-   * @class module
-   * Base internal class for the
-   * php module.
+   * @trait ImportAlternateDirectories
+   * Base internal trait for the
+   * PhpModule module.
    * -
    * This is (in the ils environment)
    * an instance of the php module,
@@ -56,49 +56,39 @@ namespace php {
    * and boot it by using the ils directory boot.
    * -
    */
-  class module {
-    use module\Parser;
-    use module\Define;
-    use module\Config;
-    use module\InitCl;
-    use module\Setter;
-    use module\Getter;
-    use module\clBase;
-    use module\Paths;
-
-    # Exts
-    use module\AlternateDirectories;
-    use module\InstanceFragmentBase;
-    use module\PHPModuleConfigure;
-    use module\ImportByAlternates;
-    use module\PHPModulePathsConf;
-    use module\SaniModulePathName;
-    use module\PHPModulePathsRead;
-    use module\RootImportConfigs;
-    use module\ExtensionSetters;
-    use module\CommandExecuter;
-    use module\Extender;
-
-    private static $autoloaded = false;
-
-    public static final function setModuleCache ($module, $module_abs) {
-    }
+  trait ImportAlternateDirectories {
     /**
-     * @method exports
-     * - Method used to export any object
-     * - for the  current module
+     * [init description]
+     * @return null
      */
-    public final function exports () {
-      if (!$this->moduleInterrop) {
-        $this->moduleInterrop = ( true );
-        $this->props ['#default'] = ( $this->exports );
+    public static function ImportAlternateDirectories () {
+      list ($moduleDirectoryBase, $module) = func_get_args();
+
+      if (!(is_string ($module) && is_string ($module))) {
+        return;
       }
 
-      return call_user_func_array ([$this, 'setProp'],
-        func_get_args ()
+      $re = '/([\\\\\/]+)$/';
+      $ds = DIRECTORY_SEPARATOR;
+      $module = preg_replace ( $re, '',
+        preg_replace ('/^([\\\\\/]+)/', '', $module)
       );
-    }
+      $moduleName = pathinfo ($module,
+        PATHINFO_FILENAME
+      );
 
-    public final static function autoload () {}
+      $moduleDirectory = (preg_replace ($re, '', $moduleDirectoryBase).
+        $ds . $module
+      );
+
+      return [
+        ($moduleDirectory . $ds .'index'),
+        ($moduleDirectory . $ds . $moduleName),
+        ($moduleDirectory),
+        ($module),
+        ($module . $ds . $moduleName),
+        ($module . $ds .'index')
+      ];
+    }
   }}
 }

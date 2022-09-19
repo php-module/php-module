@@ -5,7 +5,7 @@
  *
  * @keywords Samils, ils, php framework
  * -----------------
- * @package Sammy\Packs\PHPModule\FileAbsolutePath
+ * @package Sammy\Packs\PhpModule
  * - Autoload, application dependencies
  *
  * MIT License
@@ -30,41 +30,5 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-namespace Sammy\Packs\PHPModule\FileAbsolutePath {
-  use php\module as phpmodule;
-  /**
-   * Make sure the module base internal class is not
-   * declared in the php global scope defore creating
-   * it.
-   * It ensures that the script flux is not interrupted
-   * when trying to run the current command by the cli
-   * API.
-   */
-  if (!class_exists ('Sammy\Packs\PHPModule\FileAbsolutePath\Base')) {
-  /**
-   * @class Base
-   * Base internal class for the
-   * PHPModule\FileAbsolutePath module.
-   * -
-   * This is (in the ils environment)
-   * an instance of the php module,
-   * wich should contain the module
-   * core functionalities that should
-   * be extended.
-   * -
-   * For extending the module, just create
-   * an 'exts' directory in the module directory
-   * and boot it by using the ils directory boot.
-   * -
-   */
-  class Base {
-    /**
-     * @method string getFileAbsolutePath
-     */
-    public function getFileAbsolutePath (string $filePath = '') {
-      return phpmodule::fileAbsolutePath ($filePath);
-    }
-  }}
-
-  $module->exports = new Base;
+namespace Sammy\Packs\PhpModule {
 }

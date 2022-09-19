@@ -68,16 +68,16 @@ function requires ($__module__ = null) {
     isset ($__module__[ 'module' ])
   );
 
-  $backTrace = $funcArgs [ -1 + count ($funcArgs) ];
+  $backTrace = $funcArgs [-1 + count ($funcArgs)];
 
   $index = -2;
 
   if (!module::validTrace ($backTrace)) {
-    $backTrace = debug_backtrace();
+    $backTrace = debug_backtrace ();
     $index = -1;
   }
 
-  if ( $moduleCompleteReference ) {
+  if ($moduleCompleteReference) {
 
     $args = !isset ($__module__['args']) ? [] : (
       $__module__['args']
@@ -85,9 +85,7 @@ function requires ($__module__ = null) {
 
     $validTraceGiven = ( boolean ) (
       isset ($__module__['trace']) &&
-      module::validTrace (
-        $__module__['trace']
-      )
+      module::validTrace ($__module__['trace'])
     );
 
     if ( $validTraceGiven ) {
@@ -102,9 +100,7 @@ function requires ($__module__ = null) {
      * [$args description]
      * @var array
      */
-    $args = array_slice ($funcArgs, 1,
-      $index + count( $funcArgs )
-    );
+    $args = array_slice ($funcArgs, 1, $index + count ($funcArgs));
   }
   # Having the module name or reference in the
   # $__module__ variable and the module arguments
@@ -120,7 +116,7 @@ function requires ($__module__ = null) {
   # is a strng and it is not an empty string
   # or a null value.
   # Stop the flux otherwise.
-  if (!(is_string($__module__) && !empty($__module__))) {
+  if (!(is_string ($__module__) && !empty ($__module__))) {
     # Stop and return a null value on
     # condition that the given value
     # module name is not a valid string
@@ -176,7 +172,7 @@ function requires ($__module__ = null) {
   # otherwise, php module should considere using of
   # relative paths or an absolute path with a reference
   # for a ils path that should point to the module directory.
-  if (!is_file($__module__)) {
+  if (!is_file ($__module__)) {
     # On condition that the given module reference
     # is not an absolute file path, php module has
     # to look for other ways in order getting the
@@ -187,7 +183,7 @@ function requires ($__module__ = null) {
     # php module from; it that case, use the 'requires_relative'
     # function inside the php namespace to import the given module
     # core to the php module caller.
-    if (preg_match('/^\.+/', $__module__)){
+    if (preg_match ('/^\.+/', $__module__)) {
       # trace
       # Whole the php stack trace for the
       # current call contained in an array
@@ -226,13 +222,18 @@ function requires ($__module__ = null) {
       # directory
       $dirs = module::getConfig ('php-modules-directories');
 
-      $dirs = array_merge ($dirs, module::getVendorAlternates (
-        $backTrace
-      ));
+      $vendorAlternates = module::getVendorAlternates ($backTrace);
 
-      if (!(is_array($dirs) && $dirs)) {
+      $dirs = array_merge ($dirs, $vendorAlternates);
+
+      if (!(is_array ($dirs) && $dirs)) {
         return;
       }
+
+      #print_r($dirs);
+
+
+      #echo "\n\n\n\n\n\n\n";
 
       foreach ($dirs as $i => $dir) {
 
@@ -240,7 +241,7 @@ function requires ($__module__ = null) {
           module::readPath ($dir), $__module__
         );
 
-        foreach ($alts as $in => $alt){
+        foreach ($alts as $in => $alt) {
           $moduleFileAbsolutePath = module::shouldImport ($alt);
 
           if (is_string ($moduleFileAbsolutePath)) {
@@ -262,10 +263,7 @@ function requires ($__module__ = null) {
   $module = new module ();
   # exports
   # ...
-  $exports = new module\DataExportContext (
-    $module
-  );
-
+  $exports = new module\DataExportContext ($module);
   #$module->exports = (
    # $exports
   #);
@@ -333,7 +331,7 @@ function requires ($__module__ = null) {
       # class reference in case of the fisrt position
       # in the php module parser array containing a
       # string.
-      if (is_string($PHPModuleParser[0])) {
+      if (is_string ($PHPModuleParser [0])) {
         # The next call'll resolve with a php module
         # file instance that should be the response
         # for the required information when importing
@@ -427,11 +425,9 @@ function requires ($__module__ = null) {
         );
       }
 
-      include ( $__filename );
+      include ($__filename);
 
-      $module->exports = (
-        $module->exports
-      );
+      $module->exports = $module->exports;
 
       $module->__initialize_module_register ();
       #$exports->id = module::id ();
@@ -439,14 +435,12 @@ function requires ($__module__ = null) {
        * return the exported data from
        * the module context
        */
-      return ( $module->exports );
+      return $module->exports;
     };
 
     $fileAbsolutePath = module::fileAbsolutePath ($__module__);
 
-    $moduleContext = module::__getModuleContext (
-      $fileAbsolutePath
-    );
+    $moduleContext = module::__getModuleContext ($fileAbsolutePath);
 
     if ( $moduleContext ) {
       return $moduleContext;
