@@ -62,7 +62,7 @@ namespace Sammy\Packs\PhpModule\Extensions {
      * @param string $cmd
      * @param [type] $value
      */
-    private static function CommandExec ($cmd = '', $val) {
+    private static function CommandExec ($cmd = '', $val = null) {
       $cmdRe = '/^(module:([a-zA-Z0-9_]+)\s*)/i';
       # Get the command name in order
       # executing it to get the right
