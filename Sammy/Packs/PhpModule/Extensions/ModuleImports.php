@@ -157,7 +157,7 @@ namespace Sammy\Packs\PhpModule\Extensions {
      * @param  string $absPath
      * @return string|null
      */
-    public static final function getModuleRootDir ($abs = '') {
+    public static function getModuleRootDir ($abs = '') {
       # In order making use of any rule or settings
       # in the current ilsApplication, php module'll
       # make sure that the Applicatio COnfigurations

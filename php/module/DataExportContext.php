@@ -42,11 +42,11 @@ namespace php\module {
      * [__construct]
      * @param module $module
      */
-    public final function __construct (module $module) {
+    public function __construct (module $module) {
       $this->module = ($module);
     }
 
-    public final function __set ($prop = '', $value = null) {
+    public function __set ($prop = '', $value = null) {
       return call_user_func_array ([$this->module, 'exports'],
         array_merge (func_get_args (), [debug_backtrace()])
       );
