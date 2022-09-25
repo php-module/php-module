@@ -105,9 +105,8 @@ namespace Sammy\Packs\PhpModule {
     private static $module_default_paths = [
       '~' => '<rootDir>',
       '@root' => '<rootDir>',
-      '/^((module(Root)?|)Dir)$/i' => (
-        ':module_root_dir'
-      )
+      '/^((module(Root)?|)Dir)$/i' => ':module_root_dir',
+      '@HOME' => ':module_root_dir'
     ];
     /**
      * [$module_configs]
