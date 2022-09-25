@@ -118,13 +118,15 @@ namespace Sammy\Packs\PhpModule\Extensions {
         return;
       }
 
-      $extensionsCount = count ( self::$extensions );
+      $extensionsCount = count (self::$extensions);
 
       for ($i = 0; $i < $extensionsCount; $i++) {
         $extension = (string) (self::$extensions [$i]);
 
-        if (is_file ($moduleFile . $extension)) {
-          return ($moduleFile . $extension);
+        $moduleFileAbsolutePath = self::stripWindowsDiskRef ($moduleFile . $extension);
+
+        if (is_file ($moduleFileAbsolutePath)) {
+          return ($moduleFileAbsolutePath);
         }
       }
     }
