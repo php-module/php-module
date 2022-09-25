@@ -91,6 +91,24 @@ namespace Sammy\Packs\PhpModule\Extensions {
     }
 
     /**
+     * @method string stripWindowsDiskRef
+     *
+     * in windows OS, strip the reference for
+     * the current disk the application is running in
+     */
+    private static function stripWindowsDiskRef ($moduleFileAbsolutePath) {
+      $osName = php_uname ('s');
+
+      if (preg_match ('/windows/i', $osName)) {
+        $moduleFileAbsolutePath = preg_replace ('/^([^:]+):/', '', $moduleFileAbsolutePath);
+      }
+
+      $moduleFileAbsolutePath = preg_replace ('/^([\\\\\/]+)/', '', $moduleFileAbsolutePath);
+
+      return join (DIRECTORY_SEPARATOR, ['', $moduleFileAbsolutePath]);
+    }
+
+    /**
      * [shouldImport description]
      * @param  string $moduleFile [description]
      * @return string
