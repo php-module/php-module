@@ -48,6 +48,8 @@
     "wiki": "https://github.com/php-module/php-module/wiki"
   },
   "require": {
-    "php": ">=5.3.20"
+    "php": ">=5.3.20",
+    "php_modules/path": "dev-main",
+    "php_modules/fs": "dev-main"
   }
 }
