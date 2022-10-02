@@ -31,7 +31,7 @@
     "modular",
     "modular-php"
   ],
-  "homepage": "https://github.com/php-modules/php-module",
+  "homepage": "https://github.com/php-module/php-module",
   "readme": "./README.md",
   "license": "MIT",
   "authors": [
@@ -49,7 +49,11 @@
   },
   "require": {
     "php": ">=5.3.20",
+    "php_modules/fs": "dev-main",
+    "php_modules/include-all": "dev-main",
     "php_modules/path": "dev-main",
-    "php_modules/fs": "dev-main"
+    "samils/callable-object": "dev-main",
+    "samils/klass-props": "dev-main",
+    "samils/samils-component-functions": "dev-main"
   }
 }
