@@ -114,7 +114,7 @@ namespace Sammy\Packs\PhpModule {
      */
     private static $module_configs = [
       'extensions-file-path' => [
-        '@HOME/php-module/modules',
+        '@HOME/php-module/config/modules',
         '~/modules',
         '~/config/modules'
       ],
