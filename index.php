@@ -25,7 +25,5 @@ if ( !function_exists ('requires') ) {
  * and boot it by using the ils directory boot.
  */
 function requires () {
-	return call_user_func_array ('php\\requires',
-		array_merge (func_get_args (),  [debug_backtrace ()])
-	);
+	return call_user_func_array ('php\\requires', array_merge (func_get_args (), [ debug_backtrace () ]));
 }}
