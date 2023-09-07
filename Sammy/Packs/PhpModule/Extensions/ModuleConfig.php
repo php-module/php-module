@@ -31,6 +31,7 @@
  * SOFTWARE.
  */
 namespace Sammy\Packs\PhpModule\Extensions {
+  use function php\requires;
   /**
    * Make sure the module base internal trait is not
    * declared in the php global scope defore creating
@@ -68,13 +69,25 @@ namespace Sammy\Packs\PhpModule\Extensions {
 
       self::init ();
 
-      $phpModuleConfigs = \php\requires (self::getConfig ('extensions-file-path'));
+      $extensionsFilePaths = self::getConfig ('extensions-file-path');
 
-      self::phpModuleConfigure ($phpModuleConfigs);
+      if (!is_array ($extensionsFilePaths)) {
+        $extensionsFilePaths = [
+          $extensionsFilePaths
+        ];
+      }
+
+      foreach ($extensionsFilePaths as $extensionsFilePath) {
+        $phpModuleConfigs = requires ($extensionsFilePath);
+
+        self::phpModuleConfigure ($phpModuleConfigs);
+      }
+
+
       # Set the config initialized
       # property as true to avoid
       # repeating this action.
-      self::$configInitialized = !false;
+      self::$configInitialized = true;
     }
 
     /**
@@ -161,16 +174,16 @@ namespace Sammy\Packs\PhpModule\Extensions {
         $conf = self::$module_configs;
 
         $invalidConfigProperty = ( boolean ) (
-          isset ($conf [ $property ]) &&
-          gettype ($conf [ $property ]) !== gettype ($value)
+          isset ($conf [$property]) &&
+          gettype ($conf [$property]) !== gettype ($value)
         );
 
         if ($invalidConfigProperty) {
           return;
         }
 
-        if (isset ($conf[ $property ]) && is_array ($conf[ $property ])) {
-          $value = array_merge ($conf [ $property ], $value);
+        if (isset ($conf [$property]) && is_array ($conf [$property])) {
+          $value = array_merge ($conf [$property], $value);
         }
 
         self::$module_configs [$property] = $value;

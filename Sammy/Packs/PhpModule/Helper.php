@@ -93,5 +93,39 @@ namespace Sammy\Packs\PhpModule {
         }
       }
     }
+
+    /**
+     * @method array object to json
+     */
+    public static function json ($object = null) {
+      if (!(is_object ($object))) {
+        return $object;
+      }
+
+      if (function_exists ('lean_object')) {
+        $object = (array)(lean_object ($object));
+      }
+
+      $newObject = [];
+
+      foreach ($object as $key => $value) {
+        $newObject [ $key ] = self::json ($value);
+      }
+
+      return is_object ($newObject) ? ((array)($newObject)) : $newObject;
+    }
+
+    /**
+     * @method array file content to json
+     */
+    public static function jsonFile ($filePath) {
+      if (!is_file ($filePath)) {
+        return;
+      }
+
+      $fileContent = json_decode (file_get_contents ($filePath));
+
+      return self::json ($fileContent);
+    }
   }}
 }

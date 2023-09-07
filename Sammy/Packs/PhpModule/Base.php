@@ -113,14 +113,18 @@ namespace Sammy\Packs\PhpModule {
      * @var array
      */
     private static $module_configs = [
-      'extensions-file-path' => '~/config/modules',
+      'extensions-file-path' => [
+        '@HOME/php-module/modules',
+        '~/modules',
+        '~/config/modules'
+      ],
       'php-modules-directories' => [
         PHP_MODULE_ROOT_DIR . '/php-module/modules'
       ],
       'php-module-paths' => [
         PHP_MODULE_ROOT_DIR . '/php-module/modules'
       ],
-      'root-dir' => '/'
+      'root-dir' => null
     ];
   }}
 }
