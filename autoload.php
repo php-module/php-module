@@ -31,14 +31,16 @@
  * SOFTWARE.
  */
 namespace Sammy\Packs\php\module {
+  use php\module;
   use Sammy\Packs\PhpModule\Helper;
-	/**
-	 * Root
-	 * Absoluete path to the current directory
-	 * whish phpmodule will considere as its
-	 * root directory
-	 */
-	defined ('PHP_MODULE_ROOT_DIR') or define ('PHP_MODULE_ROOT_DIR', __DIR__);
+  /**
+   * Root
+   * Absoluete path to the current directory
+   * whish phpmodule will considere as its
+   * root directory
+   */
+  defined ('MAIN_APPLICATION_ROOT_DIR') or define ('MAIN_APPLICATION_ROOT_DIR', dirname (dirname (dirname (__DIR__))));
+  defined ('PHP_MODULE_ROOT_DIR') or define ('PHP_MODULE_ROOT_DIR', __DIR__);
   defined ('PHP_MODULE_NAMESPACE') or define ('PHP_MODULE_NAMESPACE', 'Sammy\Packs\php\module');
 
   $autoloadFile = __DIR__ . '/vendor/autoload.php';
@@ -55,11 +57,17 @@ namespace Sammy\Packs\php\module {
     include_once $autoloadFile;
   }
 
-	Helper::autoloadFiles ($phpModuleHelpersDirPath);
+  Helper::autoloadFiles ($phpModuleHelpersDirPath);
   #
   # import the index file containg the php-module
   # core global function to be used when importing
   # a module.
   #
-	include_once (__DIR__ . '/index.php');
+  include_once (__DIR__ . '/index.php');
+
+  if (class_exists (module::class)) {
+    module::config ('rootDir', MAIN_APPLICATION_ROOT_DIR);
+
+    module::initialize_config ();
+  }
 }
