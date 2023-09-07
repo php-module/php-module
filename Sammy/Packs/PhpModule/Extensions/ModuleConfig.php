@@ -173,7 +173,7 @@ namespace Sammy\Packs\PhpModule\Extensions {
          */
         $conf = self::$module_configs;
 
-        $invalidConfigProperty = ( boolean ) (
+        $invalidConfigProperty = (boolean)(
           isset ($conf [$property]) &&
           gettype ($conf [$property]) !== gettype ($value)
         );
